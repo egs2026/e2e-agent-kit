@@ -1,18 +1,18 @@
 name: e2e-agent-kit
 
 on:
-workflow_dispatch:
-push:
-branches: [ main ]
+  workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
-api-smoke:
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v4
-- name: Install dependencies
-run: npm ci
-- name: API smoke
-env:
-STAGING_URL: ${{ secrets.STAGING_URL }}
-run: npm run smoke:api
+  api-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: API smoke
+        env:
+          STAGING_URL: ${{ secrets.STAGING_URL }}
+        run: npm run smoke:api
