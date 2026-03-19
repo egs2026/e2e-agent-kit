@@ -2,8 +2,12 @@ name: e2e-agent-kit
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [ main ]
   push:
     branches: [ main ]
+  schedule:
+    - cron: "0 1 * * *" # nightly 01:00 UTC
 
 jobs:
   api-smoke:
@@ -34,3 +38,36 @@ jobs:
           E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run regression
+
+      - name: Upload E2E artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-reports-${{ github.run_id }}
+          path: reports/e2e/
+          if-no-files-found: ignore
+
+      - name: Create GitHub issue on regression failure
+        if: failure() && github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const title = `[E2E] Regression failed on ${context.ref.replace('refs/heads/','')}`;
+            const body = [
+              'Automated regression failure detected.',
+              '',
+              `- Workflow: ${context.workflow}`,
+              `- Run ID: ${context.runId}`,
+              `- Run URL: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              `- Commit: ${context.sha}`,
+              '',
+              'Please triage and attach root cause / remediation notes.'
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body
+            });
