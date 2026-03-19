@@ -1,0 +1,15 @@
+{
+  "id": "P2-201",
+  "title": "Login page branding and UX copy visible",
+  "severity": "P2",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/login" },
+    { "action": "waitForSelector", "selector": "h1" },
+    { "action": "screenshot", "name": "login-branding" }
+  ],
+  "assertions": [
+    { "type": "textContains", "selector": "h1", "value": "Welcome back" },
+    { "type": "visible", "selector": "[data-testid='login-submit']" }
+  ]
+}

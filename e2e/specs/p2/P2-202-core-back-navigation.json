@@ -1,0 +1,21 @@
+{
+  "id": "P2-202",
+  "title": "Core page back navigation returns to dashboard",
+  "severity": "P2",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/login" },
+    { "action": "fill", "selector": "[data-testid='login-email']", "valueEnv": "E2E_USER_EMAIL" },
+    { "action": "fill", "selector": "[data-testid='login-password']", "valueEnv": "E2E_USER_PASSWORD" },
+    { "action": "click", "selector": "[data-testid='login-submit']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "goto", "url": "/app/core/new" },
+    { "action": "click", "selector": "a[href='/dashboard']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "screenshot", "name": "core-back-dashboard" }
+  ],
+  "assertions": [
+    { "type": "urlIncludes", "value": "/dashboard" },
+    { "type": "visible", "selector": "[data-testid='user-avatar']" }
+  ]
+}
