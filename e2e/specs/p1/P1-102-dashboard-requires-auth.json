@@ -1,0 +1,15 @@
+{
+  "id": "P1-102",
+  "title": "Dashboard requires authentication",
+  "severity": "P1",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/dashboard" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "screenshot", "name": "dashboard-auth-redirect" }
+  ],
+  "assertions": [
+    { "type": "urlIncludes", "value": "/login?error=auth" },
+    { "type": "visible", "selector": "[data-testid='login-error']" }
+  ]
+}

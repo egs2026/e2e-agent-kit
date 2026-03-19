@@ -1,0 +1,14 @@
+{
+  "id": "P0-000",
+  "title": "Platform smoke - public page reachable",
+  "severity": "P0",
+  "baseUrl": "https://example.com",
+  "steps": [
+    { "action": "goto", "url": "/" },
+    { "action": "waitForSelector", "selector": "h1" },
+    { "action": "screenshot", "name": "landing" }
+  ],
+  "assertions": [
+    { "type": "textContains", "selector": "h1", "value": "Example Domain" }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "P0-001",
+  "title": "Login success",
+  "severity": "P0",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/login" },
+    { "action": "fill", "selector": "[data-testid='login-email']", "valueEnv": "E2E_USER_EMAIL" },
+    { "action": "fill", "selector": "[data-testid='login-password']", "valueEnv": "E2E_USER_PASSWORD" },
+    { "action": "click", "selector": "[data-testid='login-submit']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "screenshot", "name": "after-login" }
+  ],
+  "assertions": [
+    { "type": "urlIncludes", "value": "/dashboard" },
+    { "type": "visible", "selector": "[data-testid='user-avatar']" }
+  ]
+}

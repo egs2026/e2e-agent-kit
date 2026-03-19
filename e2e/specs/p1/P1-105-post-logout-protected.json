@@ -1,0 +1,22 @@
+{
+  "id": "P1-105",
+  "title": "After logout, protected route redirects to login",
+  "severity": "P1",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/login" },
+    { "action": "fill", "selector": "[data-testid='login-email']", "valueEnv": "E2E_USER_EMAIL" },
+    { "action": "fill", "selector": "[data-testid='login-password']", "valueEnv": "E2E_USER_PASSWORD" },
+    { "action": "click", "selector": "[data-testid='login-submit']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "click", "selector": "[data-testid='logout-button']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "goto", "url": "/app/core/new" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "screenshot", "name": "protected-after-logout" }
+  ],
+  "assertions": [
+    { "type": "urlIncludes", "value": "/login?error=auth" },
+    { "type": "visible", "selector": "[data-testid='login-error']" }
+  ]
+}

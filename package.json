@@ -1,0 +1,19 @@
+{
+  "name": "e2e-agent-kit",
+  "version": "0.2.0",
+  "private": true,
+  "description": "VPS-ready E2E agent starter package",
+  "scripts": {
+    "bootstrap": "bash e2e/scripts/bootstrap.sh",
+    "smoke": "bash e2e/scripts/run-smoke.sh",
+    "smoke:api": "bash e2e/scripts/run-api-smoke.sh",
+    "regression:api": "bash e2e/scripts/run-api-regression.sh",
+    "regression": "bash e2e/scripts/run-regression.sh",
+    "report:serve": "python3 -m http.server 8787 --directory reports/e2e",
+    "setup:playwright": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "playwright": "^1.53.2"
+  }
+}

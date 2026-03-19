@@ -1,0 +1,21 @@
+{
+  "id": "P0-002",
+  "title": "Core create flow",
+  "severity": "P0",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/login" },
+    { "action": "fill", "selector": "[data-testid='login-email']", "valueEnv": "E2E_USER_EMAIL" },
+    { "action": "fill", "selector": "[data-testid='login-password']", "valueEnv": "E2E_USER_PASSWORD" },
+    { "action": "click", "selector": "[data-testid='login-submit']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "goto", "url": "/app/core/new" },
+    { "action": "fill", "selector": "[data-testid='core-name']", "value": "E2E Auto Record" },
+    { "action": "click", "selector": "[data-testid='core-save']" },
+    { "action": "waitForSelector", "selector": "[data-testid='toast-success']" },
+    { "action": "screenshot", "name": "create-success" }
+  ],
+  "assertions": [
+    { "type": "visible", "selector": "[data-testid='toast-success']" }
+  ]
+}

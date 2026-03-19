@@ -1,0 +1,21 @@
+{
+  "id": "P1-103",
+  "title": "Core create shows validation when name is empty",
+  "severity": "P1",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/login" },
+    { "action": "fill", "selector": "[data-testid='login-email']", "valueEnv": "E2E_USER_EMAIL" },
+    { "action": "fill", "selector": "[data-testid='login-password']", "valueEnv": "E2E_USER_PASSWORD" },
+    { "action": "click", "selector": "[data-testid='login-submit']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "goto", "url": "/app/core/new" },
+    { "action": "click", "selector": "[data-testid='core-save']" },
+    { "action": "waitForSelector", "selector": "[data-testid='core-error']" },
+    { "action": "screenshot", "name": "core-empty-validation" }
+  ],
+  "assertions": [
+    { "type": "visible", "selector": "[data-testid='core-error']" },
+    { "type": "textContains", "selector": "[data-testid='core-error']", "value": "required" }
+  ]
+}

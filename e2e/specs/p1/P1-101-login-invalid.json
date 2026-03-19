@@ -1,0 +1,18 @@
+{
+  "id": "P1-101",
+  "title": "Login fails with invalid password",
+  "severity": "P1",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/login" },
+    { "action": "fill", "selector": "[data-testid='login-email']", "valueEnv": "E2E_USER_EMAIL" },
+    { "action": "fill", "selector": "[data-testid='login-password']", "value": "invalid-password" },
+    { "action": "click", "selector": "[data-testid='login-submit']" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "screenshot", "name": "login-invalid" }
+  ],
+  "assertions": [
+    { "type": "urlIncludes", "value": "/login?error=invalid" },
+    { "type": "visible", "selector": "[data-testid='login-error']" }
+  ]
+}

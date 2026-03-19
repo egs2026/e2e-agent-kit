@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "e2e-filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/root/.openclaw/workspace/e2e-agent-kit"
+      ]
+    }
+  }
+}
