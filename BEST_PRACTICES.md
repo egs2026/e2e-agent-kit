@@ -21,6 +21,8 @@
 - Keep app runtime in `tmux` session (`fastapi`).
 - Keep report server in `tmux` (`e2e-reports`).
 - Keep MCP bridge in `tmux` (`e2e-mcp`).
+- Edit GitHub workflow YAML from terminal when possible; verify indentation before push.
+- Use `main` branch consistently for CI triggers and protection rules.
 
 ## Next recommended upgrades
 1. Add CI pipeline (PR smoke + nightly regression).
