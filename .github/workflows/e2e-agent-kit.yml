@@ -1,3 +1,6 @@
+cd /root/.openclaw/workspace/e2e-agent-kit
+
+cat > .github/workflows/e2e-agent-kit.yml <<'YAML'
 name: e2e-agent-kit
 
 on:
@@ -34,3 +37,8 @@ STAGING_URL: ${{ secrets.STAGING_URL }}
 E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
 E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
 run: npm run regression
+YAML
+
+git add .github/workflows/e2e-agent-kit.yml
+git commit -m "Fix workflow indentation for api-smoke and ui-regression"
+git push
