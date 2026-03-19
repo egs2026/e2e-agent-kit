@@ -1,0 +1,14 @@
+{
+  "id": "P2-203",
+  "title": "Health endpoint accessible from staging root",
+  "severity": "P2",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/health" },
+    { "action": "waitForLoadState", "state": "domcontentloaded" },
+    { "action": "screenshot", "name": "health-endpoint" }
+  ],
+  "assertions": [
+    { "type": "urlIncludes", "value": "/health" }
+  ]
+}
