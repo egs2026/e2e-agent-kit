@@ -28,6 +28,7 @@ Then open:
 ## Main commands
 - `npm run smoke` — run P0 smoke pack
 - `npm run regression` — run P0+P1 regression
+- `npm run check:endpoints` — verify all public URLs + MCP auth guard
 - `npm run report:serve` — serve reports locally on port 8787
 
 ## Optional: keep report portal always on (tmux)
