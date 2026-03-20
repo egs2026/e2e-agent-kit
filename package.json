@@ -11,6 +11,8 @@
     "regression": "bash e2e/scripts/run-regression.sh",
     "regression:p2": "bash e2e/scripts/run-p2.sh",
     "e2e:run": "bash e2e/scripts/run-by-priority.sh",
+    "ai:generate-spec": "node e2e/scripts/ai-generate-spec.mjs",
+    "ai:refine-spec": "node e2e/scripts/ai-refine-spec.mjs",
     "check:endpoints": "bash e2e/scripts/check-endpoints.sh",
     "report:serve": "python3 -m http.server 8787 --directory reports/e2e",
     "setup:playwright": "npx playwright install chromium"

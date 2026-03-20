@@ -1,0 +1,85 @@
+{
+  "id": "P1-301",
+  "title": "AI Generated: Login and create core record",
+  "severity": "P1",
+  "baseUrlEnv": "STAGING_URL",
+  "generatedFrom": "US-001-login-and-create.md",
+  "generationNotes": [
+    "User can login with valid credentials",
+    "Dashboard is visible after login",
+    "User can open core create form",
+    "User can submit valid name",
+    "User is redirected to core list/detail after save"
+  ],
+  "steps": [
+    {
+      "action": "goto",
+      "url": "/login"
+    },
+    {
+      "action": "fill",
+      "selector": "[data-testid='login-email']",
+      "valueEnv": "E2E_USER_EMAIL"
+    },
+    {
+      "action": "fill",
+      "selector": "[data-testid='login-password']",
+      "valueEnv": "E2E_USER_PASSWORD"
+    },
+    {
+      "action": "click",
+      "selector": "[data-testid='login-submit']",
+      "fallbackSelectors": [
+        "button[type=\"submit\"]",
+        "button:has-text(\"Submit\")"
+      ]
+    },
+    {
+      "action": "waitForLoadState",
+      "state": "networkidle"
+    },
+    {
+      "action": "waitForSelector",
+      "selector": "[data-testid='dashboard-root']",
+      "timeoutMs": 30000
+    },
+    {
+      "action": "goto",
+      "url": "/app/core/new"
+    },
+    {
+      "action": "fill",
+      "selector": "[data-testid='core-name']",
+      "value": "AI generated item"
+    },
+    {
+      "action": "click",
+      "selector": "[data-testid='core-submit']",
+      "fallbackSelectors": [
+        "button[type=\"submit\"]",
+        "button:has-text(\"Submit\")"
+      ]
+    },
+    {
+      "action": "waitForLoadState",
+      "state": "networkidle"
+    },
+    {
+      "action": "screenshot",
+      "name": "ai-generated-end"
+    }
+  ],
+  "assertions": [
+    {
+      "type": "urlIncludes",
+      "value": "/app/core"
+    }
+  ],
+  "refinedAt": "2026-03-20T14:17:32.796Z",
+  "refinementNotes": [
+    "increase timeout and add wait for dashboard and use fallback selector",
+    "Increased waitForSelector timeout to >=30000ms",
+    "Added fallbackSelectors for click step: [data-testid='login-submit']",
+    "Added fallbackSelectors for click step: [data-testid='core-submit']"
+  ]
+}

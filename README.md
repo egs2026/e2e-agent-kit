@@ -29,6 +29,8 @@ Then open:
 - `npm run smoke` — run P0 smoke pack
 - `npm run regression` — run P0+P1 regression
 - `npm run e2e:run` — run by priority (`PRIORITY=High,Medium npm run e2e:run`)
+- `npm run ai:generate-spec -- --story=e2e/stories/US-001-login-and-create.md --severity=P1 --id=P1-301` — generate draft JSON spec from user story
+- `npm run ai:refine-spec -- --spec=e2e/specs/p1/<file>.json --feedback="increase timeout and add wait for dashboard"` — refine spec from natural language feedback
 - `npm run check:endpoints` — verify all public URLs + MCP auth guard
 - `npm run report:serve` — serve reports locally on port 8787
 
