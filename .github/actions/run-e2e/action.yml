@@ -88,6 +88,7 @@ runs:
 
     - name: Upsert PR summary + annotations
       if: ${{ inputs.github-token != '' && github.event_name == 'pull_request' }}
+      continue-on-error: true
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
@@ -120,6 +121,7 @@ runs:
 
     - name: Create or update failure issue (non-PR)
       if: ${{ inputs.github-token != '' && github.event_name != 'pull_request' && steps.summary.outputs.failed_tests != '0' }}
+      continue-on-error: true
       uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
