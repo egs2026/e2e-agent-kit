@@ -5,33 +5,76 @@ on:
     - cron: "0 2 * * 1" # Mondays 02:00 UTC
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
 jobs:
   weekly-summary:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: write
     steps:
       - name: Create weekly QA summary issue
         uses: actions/github-script@v7
         with:
           script: |
-            const today = new Date().toISOString().slice(0,10);
-            const title = `[Weekly QA] E2E health summary (${today})`;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const now = new Date();
+            const since = new Date(now.getTime() - 7*24*60*60*1000).toISOString();
+
+            const workflows = await github.rest.actions.listRepoWorkflows({ owner, repo, per_page: 100 });
+            const target = workflows.data.workflows.find(w => w.name === 'e2e-agent-kit');
+
+            let runs = [];
+            if (target) {
+              const r = await github.rest.actions.listWorkflowRuns({
+                owner,
+                repo,
+                workflow_id: target.id,
+                per_page: 100,
+              });
+              runs = r.data.workflow_runs.filter(x => x.created_at >= since);
+            }
+
+            const total = runs.length;
+            const success = runs.filter(r => r.conclusion === 'success').length;
+            const failed = runs.filter(r => r.conclusion === 'failure').length;
+            const cancelled = runs.filter(r => r.conclusion === 'cancelled').length;
+            const successRate = total ? ((success/total)*100).toFixed(1) : '0.0';
+
+            const failures = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: 'e2e-failure',
+              per_page: 100,
+            });
+
+            const titleDate = now.toISOString().slice(0,10);
+            const title = `[Weekly QA] E2E health summary (${titleDate})`;
             const body = [
-              'Automated weekly summary placeholder.',
+              'Automated weekly E2E quality summary.',
               '',
-              'Please update with:',
+              `- Window: last 7 days (since ${since.slice(0,10)})`,
+              `- Total runs: **${total}**`,
+              `- Success: **${success}**`,
+              `- Failed: **${failed}**`,
+              `- Cancelled: **${cancelled}**`,
+              `- Success rate: **${successRate}%**`,
+              `- Open e2e-failure issues: **${failures.data.length}**`,
+              '',
+              '## Manual review checklist',
               '- P0 pass trend',
               '- P1/P2 pass trend',
               '- Flaky test count',
               '- Top 3 failure causes',
-              '- Action items'
+              '- Action items for next week'
             ].join('\n');
 
             await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner,
+              repo,
               title,
               body,
               labels: ['qa-weekly']
