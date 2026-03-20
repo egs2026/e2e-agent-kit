@@ -43,3 +43,10 @@ From `.github/actions/run-e2e/action.yml`:
 - `issues: write`
 
 This enables both PR comments and issue routing.
+
+## 6) Preflight Gate (added)
+Before the E2E job runs, a `preflight` job now validates:
+- required secrets exist (`STAGING_URL`, `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`)
+- staging health endpoint is reachable (`$STAGING_URL/health` returns 200)
+
+This provides fast-fail diagnostics and avoids wasting runner time when config is missing/broken.
