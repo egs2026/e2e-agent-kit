@@ -102,7 +102,7 @@ runs:
           - Passed: **${{ steps.summary.outputs.passed_tests }}**
           - Failed: **${{ steps.summary.outputs.failed_tests }}**
           - Pass rate: **${{ steps.summary.outputs.pass_rate }}%**
-          - Priority: `${{ inputs.priority || 'all' }}`
+          - Priority: ${{ inputs.priority || 'all' }}
           - Result: ${{ steps.meta.outputs.result_url }}
 
           ### Top Failed Cases
