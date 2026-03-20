@@ -33,6 +33,8 @@ jobs:
           base_url: ${{ secrets.STAGING_URL }}
           priority: ${{ github.event.inputs.priority || 'High,Medium' }}
           blocking: ${{ github.event.inputs.blocking || 'true' }}
+          e2e-user-email: ${{ secrets.E2E_USER_EMAIL }}
+          e2e-user-password: ${{ secrets.E2E_USER_PASSWORD }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload E2E artifacts

@@ -18,6 +18,12 @@ inputs:
     description: 'When true, fail step if any tests failed'
     required: false
     default: 'false'
+  e2e-user-email:
+    description: 'E2E login email'
+    required: false
+  e2e-user-password:
+    description: 'E2E login password'
+    required: false
 outputs:
   total_tests:
     description: 'Total number of tests run'
@@ -48,11 +54,25 @@ runs:
       shell: bash
       run: npx playwright install --with-deps chromium
 
+    - name: Validate required secrets
+      shell: bash
+      run: |
+        if [[ -z "${{ inputs.base_url }}" ]]; then
+          echo "Missing required input: base_url"
+          exit 1
+        fi
+        if [[ -z "${{ inputs.e2e-user-email }}" || -z "${{ inputs.e2e-user-password }}" ]]; then
+          echo "Missing E2E credentials. Set secrets E2E_USER_EMAIL and E2E_USER_PASSWORD in repo settings."
+          exit 1
+        fi
+
     - name: Run E2E by priority
       shell: bash
       env:
         STAGING_URL: ${{ inputs.base_url }}
         PRIORITY: ${{ inputs.priority }}
+        E2E_USER_EMAIL: ${{ inputs.e2e-user-email }}
+        E2E_USER_PASSWORD: ${{ inputs.e2e-user-password }}
       run: |
         RUN_ID="${{ github.run_id }}-${{ github.run_attempt }}"
         echo "RUN_ID=$RUN_ID" >> "$GITHUB_ENV"
