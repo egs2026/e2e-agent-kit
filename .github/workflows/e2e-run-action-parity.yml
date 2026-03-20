@@ -22,6 +22,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
 
@@ -48,4 +49,6 @@ jobs:
           echo "total_tests=${{ steps.e2e.outputs.total_tests }}"
           echo "passed_tests=${{ steps.e2e.outputs.passed_tests }}"
           echo "failed_tests=${{ steps.e2e.outputs.failed_tests }}"
+          echo "pass_rate=${{ steps.e2e.outputs.pass_rate }}"
           echo "result_url=${{ steps.e2e.outputs.result_url }}"
+          echo "summary_json=${{ steps.e2e.outputs.summary_json }}"
