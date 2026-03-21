@@ -17,6 +17,7 @@
     "mcp:daily-gate": "bash e2e/scripts/run-daily-gate.sh",
     "prod:status": "bash e2e/scripts/prod-readiness-status.sh",
     "spec:validate": "node e2e/scripts/spec-validate.mjs",
+    "spec:validate:combined": "node e2e/scripts/spec-validate.mjs --combine-latest",
     "deploy:frontend": "bash deploy/deploy-frontend-wrapper.sh",
     "dashboard": "bash e2e/scripts/dashboard.sh",
     "check:endpoints": "bash e2e/scripts/check-endpoints.sh",

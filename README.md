@@ -36,6 +36,7 @@ Then open:
 - `npm run mcp:daily-gate` — run daily full gate (endpoints + API smoke + regression + security)
 - `npm run prod:status` — evaluate latest readiness and print GO/NO-GO + reasons
 - `npm run spec:validate -- --run-id=<run-id>` — compare executed tests with product requirements/spec mapping
+- `npm run spec:validate:combined` — compare requirements against latest regression + security runs
 - `npm run deploy:frontend` — one-command frontend deploy (uses `dist/` by default)
 - `npm run check:endpoints` — verify all public URLs + MCP auth guard
 - `npm run report:serve` — serve reports locally on port 8787

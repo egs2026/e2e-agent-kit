@@ -28,10 +28,17 @@ Use latest run automatically:
 npm run spec:validate
 ```
 
-Or specific run:
+Use combined latest regression + security runs (recommended):
+
+```bash
+npm run spec:validate:combined
+```
+
+Or specific run(s):
 
 ```bash
 npm run spec:validate -- --run-id=20260321T092456Z-regression
+npm run spec:validate -- --run-ids=20260321T092456Z-regression,20260321T092541Z-security
 ```
 
 ## 5) Outputs

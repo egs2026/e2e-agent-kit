@@ -3,6 +3,8 @@ import path from 'node:path';
 
 const args = process.argv.slice(2);
 const runArg = args.find((a) => a.startsWith('--run-id='));
+const runIdsArg = args.find((a) => a.startsWith('--run-ids='));
+const combineLatest = args.includes('--combine-latest');
 
 const root = process.cwd();
 const reportRoot = path.join(root, 'reports', 'e2e');
@@ -25,13 +27,29 @@ async function walkSpecs(dir) {
   return out;
 }
 
-const runId = runArg ? runArg.split('=')[1] : (await latestRunId());
-if (!runId) {
+let selectedRunIds = [];
+if (runIdsArg) {
+  selectedRunIds = runIdsArg.split('=')[1].split(',').map((s) => s.trim()).filter(Boolean);
+} else if (combineLatest) {
+  const all = (await fs.readdir(reportRoot, { withFileTypes: true }))
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .sort()
+    .reverse();
+  const latestRegression = all.find((n) => n.endsWith('-regression'));
+  const latestSecurity = all.find((n) => n.endsWith('-security'));
+  selectedRunIds = [latestRegression, latestSecurity].filter(Boolean);
+} else {
+  const runId = runArg ? runArg.split('=')[1] : (await latestRunId());
+  if (runId) selectedRunIds = [runId];
+}
+
+if (selectedRunIds.length === 0) {
   console.error('No run id found.');
   process.exit(1);
 }
 
-const runDir = path.join(reportRoot, runId);
+const runDir = path.join(reportRoot, selectedRunIds[0]);
 const requirements = JSON.parse(await fs.readFile(reqPath, 'utf8')).requirements || [];
 
 const specFiles = await walkSpecs(path.join(root, 'e2e', 'specs'));
@@ -45,11 +63,22 @@ for (const f of specFiles) {
   } catch {}
 }
 
-const runFiles = (await fs.readdir(runDir)).filter((f) => f.endsWith('.result.json'));
 const runResults = new Map();
-for (const f of runFiles) {
-  const j = JSON.parse(await fs.readFile(path.join(runDir, f), 'utf8'));
-  runResults.set(j.caseId, j.status);
+for (const rid of selectedRunIds) {
+  const dir = path.join(reportRoot, rid);
+  let runFiles = [];
+  try {
+    runFiles = (await fs.readdir(dir)).filter((f) => f.endsWith('.result.json'));
+  } catch {
+    continue;
+  }
+  for (const f of runFiles) {
+    const j = JSON.parse(await fs.readFile(path.join(dir, f), 'utf8'));
+    // If a case appears multiple times, FAIL takes precedence over PASS
+    const prev = runResults.get(j.caseId);
+    if (!prev) runResults.set(j.caseId, j.status);
+    else if (prev === 'PASS' && j.status === 'FAIL') runResults.set(j.caseId, 'FAIL');
+  }
 }
 
 const byRequirement = requirements.map((r) => {
@@ -92,7 +121,7 @@ const coverageRate = totals.requirements ? Number(((totals.covered / totals.requ
 const passRate = totals.covered ? Number(((totals.pass / totals.covered) * 100).toFixed(2)) : 0;
 
 const out = {
-  runId,
+  runIds: selectedRunIds,
   generatedAt: new Date().toISOString(),
   totals: { ...totals, coverageRate, passRate },
   requirements: byRequirement
@@ -106,7 +135,7 @@ const rows = byRequirement
   .map((r) => `| ${r.id} | ${r.priority} | ${r.status} | ${r.linkedCases.join(', ') || '-'} |`)
   .join('\n');
 
-const md = `# Spec Validation\n\n- Run ID: ${runId}\n- Requirement Coverage: ${coverageRate}%\n- Requirement Pass Rate (covered): ${passRate}%\n- Covered: ${totals.covered}\n- Uncovered: ${totals.uncovered}\n- Fail: ${totals.fail}\n- Not Executed: ${totals.notExecuted}\n\n| Requirement | Priority | Status | Linked Cases |\n|---|---|---|---|\n${rows}\n`;
+const md = `# Spec Validation\n\n- Run IDs: ${selectedRunIds.join(', ')}\n- Requirement Coverage: ${coverageRate}%\n- Requirement Pass Rate (covered): ${passRate}%\n- Covered: ${totals.covered}\n- Uncovered: ${totals.uncovered}\n- Fail: ${totals.fail}\n- Not Executed: ${totals.notExecuted}\n\n| Requirement | Priority | Status | Linked Cases |\n|---|---|---|---|\n${rows}\n`;
 await fs.writeFile(outMd, md);
 
 console.log(`spec_validation_json=${outJson}`);
