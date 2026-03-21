@@ -42,6 +42,8 @@ const html = `<!doctype html>
     .filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
     .filters input,.filters select{width:100%;background:#0b1330;border:1px solid #2d4272;color:#e8efff;border-radius:8px;padding:7px 8px;font-size:12px}
     .list{padding:8px}
+    .group-title{font-size:11px;color:#8fb1ff;letter-spacing:.08em;padding:10px 8px 6px;font-weight:700;text-transform:uppercase}
+    .group-box{border:1px solid #24345f;border-radius:10px;margin:8px 4px;padding:4px;background:rgba(122,168,255,.03)}
     .item{display:block;padding:8px 10px;border-radius:8px;color:#dbe6ff;text-decoration:none;font-size:13px;word-break:break-all}
     .item:hover{background:#1a2750}
     .item.active{background:#244089}
@@ -140,14 +142,34 @@ const html = `<!doctype html>
         list.innerHTML = '<div class="empty">No files match current filter.</div>';
         return;
       }
-      visible.forEach((f) => {
-        const a = document.createElement('a');
-        a.href = '#';
-        a.className = 'item';
-        a.textContent = f;
-        a.onclick = (e)=>{e.preventDefault();openFile(f,a)};
-        list.appendChild(a);
-      });
+
+      const grouped = new Map();
+      for (const f of visible) {
+        const key = extractProject(f);
+        if (!grouped.has(key)) grouped.set(key, []);
+        grouped.get(key).push(f);
+      }
+
+      const keys = [...grouped.keys()].sort();
+      for (const key of keys) {
+        const title = document.createElement('div');
+        title.className = 'group-title';
+        title.textContent = 'Project: ' + key;
+        list.appendChild(title);
+
+        const box = document.createElement('div');
+        box.className = 'group-box';
+        for (const f of grouped.get(key)) {
+          const a = document.createElement('a');
+          a.href = '#';
+          a.className = 'item';
+          a.textContent = f;
+          a.onclick = (e)=>{e.preventDefault();openFile(f,a)};
+          box.appendChild(a);
+        }
+        list.appendChild(box);
+      }
+
       const target = (selectPath && visible.includes(selectPath)) ? selectPath : visible[0];
       const el = [...document.querySelectorAll('.item')].find(i => i.textContent === target);
       openFile(target, el);
