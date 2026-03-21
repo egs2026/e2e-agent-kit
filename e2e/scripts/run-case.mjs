@@ -17,9 +17,12 @@ const outDir = path.join("reports", "e2e", runId);
 const screenshotDir = path.join(outDir, "screenshots");
 const traceDir = path.join(outDir, "traces");
 const videoDir = path.join(outDir, "videos");
+const stepShotDir = path.join(outDir, "step-shots");
+const recordStepShots = String(process.env.RECORD_STEP_SCREENSHOTS || "true").toLowerCase() === "true";
 await fs.mkdir(screenshotDir, { recursive: true });
 await fs.mkdir(traceDir, { recursive: true });
 await fs.mkdir(videoDir, { recursive: true });
+if (recordStepShots) await fs.mkdir(stepShotDir, { recursive: true });
 
 const raw = await fs.readFile(casePath, "utf8");
 const spec = JSON.parse(raw);
@@ -54,6 +57,7 @@ let error = null;
 let tracePath = null;
 let failScreenshotPath = null;
 let videoPath = null;
+const stepScreenshots = [];
 
 try {
   const baseUrl = resolveBaseUrl();
@@ -67,7 +71,9 @@ try {
   page = await context.newPage();
   page.on("console", (msg) => logs.push({ type: msg.type(), text: msg.text() }));
 
+  let stepIndex = 0;
   for (const step of spec.steps || []) {
+    stepIndex += 1;
     switch (step.action) {
       case "goto":
         await page.goto(step.url, { waitUntil: "domcontentloaded" });
@@ -91,6 +97,15 @@ try {
       }
       default:
         throw new Error(`Unsupported step action: ${step.action}`);
+    }
+
+    if (recordStepShots && page) {
+      const safeAction = String(step.action || 'step').replace(/[^a-z0-9_-]+/gi, '-');
+      const file = path.join(stepShotDir, `${caseId}-${String(stepIndex).padStart(2, '0')}-${safeAction}.png`);
+      try {
+        await page.screenshot({ path: file, fullPage: true });
+        stepScreenshots.push(file);
+      } catch {}
     }
   }
 
@@ -161,7 +176,8 @@ const result = {
   artifacts: {
     tracePath,
     failScreenshotPath,
-    videoPath
+    videoPath,
+    stepScreenshots
   },
   casePath
 };

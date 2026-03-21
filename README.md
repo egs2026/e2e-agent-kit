@@ -45,3 +45,5 @@ tmux new -s e2e-reports -d 'cd /root/.openclaw/workspace/e2e-agent-kit && npm ru
 - Save auth state in `e2e/state/auth/` for stable repeated runs.
 - Keep secrets in `.env` (git-ignored), never in committed files.
 - Reports are generated per-run under `reports/e2e/<run-id>/`.
+- Video recording is enabled per test case (`reports/e2e/<run-id>/videos/`).
+- Step-by-step screenshots are auto-captured by default (`reports/e2e/<run-id>/step-shots/`). Set `RECORD_STEP_SCREENSHOTS=false` to disable.
