@@ -27,4 +27,6 @@ cat > "$OUT_DIR/summary.md" <<EOF
 $(ls "$OUT_DIR"/*.result.json 2>/dev/null | sed 's#^#- #' || true)
 EOF
 
+node e2e/scripts/build-report-explorer.mjs >/dev/null 2>&1 || true
+
 echo "[summarize] $OUT_DIR/summary.md"

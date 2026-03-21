@@ -39,6 +39,7 @@ Then open:
 - `npm run spec:validate:combined` — compare requirements against latest regression + security runs
 - `npm run deploy:frontend` — one-command frontend deploy (uses `dist/` by default)
 - `npm run check:endpoints` — verify all public URLs + MCP auth guard
+- `npm run report:explorer` — generate side-by-side report explorer page
 - `npm run report:serve` — serve reports locally on port 8787
 
 ## Optional: keep report portal always on (tmux)
