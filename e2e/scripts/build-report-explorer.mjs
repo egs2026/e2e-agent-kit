@@ -78,7 +78,10 @@ const html = `<!doctype html>
     <div class="right">
       <div class="bar">
         <div id="current" style="font-size:12px;color:#c7d8ff">Select a report file</div>
-        <a id="openNew" href="#" target="_blank" rel="noopener">Open in new tab</a>
+        <div style="display:flex;gap:12px;align-items:center">
+          <a href="/dashboard">Back to dashboard</a>
+          <a id="openNew" href="#" target="_blank" rel="noopener">Open in new tab</a>
+        </div>
       </div>
       <iframe id="viewer" title="Report Viewer"></iframe>
     </div>
