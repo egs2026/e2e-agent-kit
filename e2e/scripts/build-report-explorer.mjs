@@ -39,6 +39,8 @@ const html = `<!doctype html>
     .head{padding:14px 16px;border-bottom:1px solid #24345f;position:sticky;top:0;background:#0f1733;z-index:2}
     .title{font-size:14px;letter-spacing:.08em;color:#8fb1ff;font-weight:700}
     .sub{font-size:12px;color:#9fb0d0;margin-top:4px}
+    .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .filters input,.filters select{width:100%;background:#0b1330;border:1px solid #2d4272;color:#e8efff;border-radius:8px;padding:7px 8px;font-size:12px}
     .list{padding:8px}
     .item{display:block;padding:8px 10px;border-radius:8px;color:#dbe6ff;text-decoration:none;font-size:13px;word-break:break-all}
     .item:hover{background:#1a2750}
@@ -56,6 +58,17 @@ const html = `<!doctype html>
       <div class="head">
         <div class="title">E2E REPORT EXPLORER</div>
         <div class="sub">Open report files side-by-side</div>
+        <div class="filters">
+          <input id="q" placeholder="Filter path / run id..." />
+          <select id="ext">
+            <option value="all">All types</option>
+            <option value="md">.md</option>
+            <option value="json">.json</option>
+            <option value="png">.png</option>
+            <option value="webm">.webm</option>
+            <option value="zip">.zip</option>
+          </select>
+        </div>
       </div>
       <div class="list" id="list"></div>
     </div>
@@ -73,6 +86,8 @@ const html = `<!doctype html>
     const viewer = document.getElementById('viewer');
     const current = document.getElementById('current');
     const openNew = document.getElementById('openNew');
+    const q = document.getElementById('q');
+    const ext = document.getElementById('ext');
 
     function openFile(rel, el){
       const safe = encodeURI(rel);
@@ -84,10 +99,24 @@ const html = `<!doctype html>
       location.hash = '#' + safe;
     }
 
-    if(!files.length){
-      list.innerHTML = '<div class="empty">No report files found yet.</div>';
-    } else {
-      files.forEach((f) => {
+    function filteredFiles(){
+      const term = (q.value || '').toLowerCase().trim();
+      const t = ext.value;
+      return files.filter((f) => {
+        if (term && !f.toLowerCase().includes(term)) return false;
+        if (t !== 'all' && !f.toLowerCase().endsWith('.' + t)) return false;
+        return true;
+      });
+    }
+
+    function render(selectPath){
+      const visible = filteredFiles();
+      list.innerHTML = '';
+      if(!visible.length){
+        list.innerHTML = '<div class="empty">No files match current filter.</div>';
+        return;
+      }
+      visible.forEach((f) => {
         const a = document.createElement('a');
         a.href = '#';
         a.className = 'item';
@@ -95,11 +124,19 @@ const html = `<!doctype html>
         a.onclick = (e)=>{e.preventDefault();openFile(f,a)};
         list.appendChild(a);
       });
+      const target = (selectPath && visible.includes(selectPath)) ? selectPath : visible[0];
+      const el = [...document.querySelectorAll('.item')].find(i => i.textContent === target);
+      openFile(target, el);
+    }
 
+    q.addEventListener('input', () => render(current.textContent));
+    ext.addEventListener('change', () => render(current.textContent));
+
+    if(!files.length){
+      list.innerHTML = '<div class="empty">No report files found yet.</div>';
+    } else {
       const hash = decodeURIComponent((location.hash || '').replace(/^#/,''));
-      const initial = files.includes(hash) ? hash : files[0];
-      const el = [...document.querySelectorAll('.item')].find(i => i.textContent === initial);
-      openFile(initial, el);
+      render(hash || files[0]);
     }
   </script>
 </body>
