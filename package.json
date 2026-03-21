@@ -13,6 +13,7 @@
     "e2e:run": "bash e2e/scripts/run-by-priority.sh",
     "ai:generate-spec": "node e2e/scripts/ai-generate-spec.mjs",
     "ai:refine-spec": "node e2e/scripts/ai-refine-spec.mjs",
+    "mcp:daily-gate": "bash e2e/scripts/run-daily-gate.sh",
     "check:endpoints": "bash e2e/scripts/check-endpoints.sh",
     "report:serve": "python3 -m http.server 8787 --directory reports/e2e",
     "setup:playwright": "npx playwright install chromium"
