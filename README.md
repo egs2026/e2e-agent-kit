@@ -32,6 +32,7 @@ Then open:
 - `npm run ai:generate-spec -- --story=e2e/stories/US-001-login-and-create.md --severity=P1 --id=P1-301` — generate draft JSON spec from user story
 - `npm run ai:refine-spec -- --spec=e2e/specs/p1/<file>.json --feedback="increase timeout and add wait for dashboard"` — refine spec from natural language feedback
 - `npm run dashboard` — generate consolidated dashboard snapshot from recent runs
+- `npm run security` — run security/session baseline test pack
 - `npm run check:endpoints` — verify all public URLs + MCP auth guard
 - `npm run report:serve` — serve reports locally on port 8787
 

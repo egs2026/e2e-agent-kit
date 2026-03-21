@@ -1,0 +1,15 @@
+{
+  "id": "SEC-001",
+  "title": "Unauthenticated user cannot access core list",
+  "severity": "P1",
+  "baseUrlEnv": "STAGING_URL",
+  "steps": [
+    { "action": "goto", "url": "/app/core/list" },
+    { "action": "waitForLoadState", "state": "networkidle" },
+    { "action": "screenshot", "name": "unauthorized-core-list" }
+  ],
+  "assertions": [
+    { "type": "urlIncludes", "value": "/login" },
+    { "type": "visible", "selector": "[data-testid='login-submit']" }
+  ]
+}

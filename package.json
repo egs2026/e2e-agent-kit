@@ -10,6 +10,7 @@
     "regression:api": "bash e2e/scripts/run-api-regression.sh",
     "regression": "bash e2e/scripts/run-regression.sh",
     "regression:p2": "bash e2e/scripts/run-p2.sh",
+    "security": "bash e2e/scripts/run-security.sh",
     "e2e:run": "bash e2e/scripts/run-by-priority.sh",
     "ai:generate-spec": "node e2e/scripts/ai-generate-spec.mjs",
     "ai:refine-spec": "node e2e/scripts/ai-refine-spec.mjs",
