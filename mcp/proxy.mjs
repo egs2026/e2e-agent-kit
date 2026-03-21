@@ -26,31 +26,52 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const upstreamUrl = new URL(req.url || "/", UPSTREAM);
-  const headers = { ...req.headers };
-  headers.host = upstreamUrl.host;
+  const chunks = [];
+  req.on("data", (c) => chunks.push(c));
+  req.on("end", () => {
+    const body = Buffer.concat(chunks);
 
-  const upstreamReq = http.request(
-    {
-      protocol: upstreamUrl.protocol,
-      hostname: upstreamUrl.hostname,
-      port: upstreamUrl.port,
-      method: req.method,
-      path: upstreamUrl.pathname + upstreamUrl.search,
-      headers,
-    },
-    (upstreamRes) => {
-      res.writeHead(upstreamRes.statusCode || 502, upstreamRes.headers);
-      upstreamRes.pipe(res);
-    }
-  );
+    // Compatibility shim: some clients send notifications/initialized and expect 2xx,
+    // but upstream may reject with 400. It's safe to ack this notification locally.
+    try {
+      if (body.length > 0 && (req.method || "").toUpperCase() === "POST") {
+        const j = JSON.parse(body.toString("utf8"));
+        if (j?.method === "notifications/initialized") {
+          res.writeHead(202, { "content-type": "application/json" });
+          res.end(JSON.stringify({ ok: true, handledBy: "mcp-proxy" }));
+          return;
+        }
+      }
+    } catch {}
 
-  upstreamReq.on("error", (err) => {
-    res.writeHead(502, { "content-type": "application/json" });
-    res.end(JSON.stringify({ error: "bad_gateway", detail: String(err) }));
+    const upstreamUrl = new URL(req.url || "/", UPSTREAM);
+    const headers = { ...req.headers };
+    headers.host = upstreamUrl.host;
+    headers["content-length"] = String(body.length);
+
+    const upstreamReq = http.request(
+      {
+        protocol: upstreamUrl.protocol,
+        hostname: upstreamUrl.hostname,
+        port: upstreamUrl.port,
+        method: req.method,
+        path: upstreamUrl.pathname + upstreamUrl.search,
+        headers,
+      },
+      (upstreamRes) => {
+        res.writeHead(upstreamRes.statusCode || 502, upstreamRes.headers);
+        upstreamRes.pipe(res);
+      }
+    );
+
+    upstreamReq.on("error", (err) => {
+      res.writeHead(502, { "content-type": "application/json" });
+      res.end(JSON.stringify({ error: "bad_gateway", detail: String(err) }));
+    });
+
+    upstreamReq.write(body);
+    upstreamReq.end();
   });
-
-  req.pipe(upstreamReq);
 });
 
 server.listen(PORT, "0.0.0.0", () => {

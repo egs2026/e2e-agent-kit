@@ -29,6 +29,8 @@ npx -y supergateway \
   --port "${MCP_STDIO_PORT}" \
   --logLevel info \
   --protocolVersion "${MCP_PROTOCOL_VERSION}" \
+  --stateful \
+  --sessionTimeout 3600000 \
   --healthEndpoint /healthz &
 GW_PID=$!
 
