@@ -39,7 +39,7 @@ const html = `<!doctype html>
     .head{padding:14px 16px;border-bottom:1px solid #24345f;position:sticky;top:0;background:#0f1733;z-index:2}
     .title{font-size:14px;letter-spacing:.08em;color:#8fb1ff;font-weight:700}
     .sub{font-size:12px;color:#9fb0d0;margin-top:4px}
-    .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
     .filters input,.filters select{width:100%;background:#0b1330;border:1px solid #2d4272;color:#e8efff;border-radius:8px;padding:7px 8px;font-size:12px}
     .list{padding:8px}
     .item{display:block;padding:8px 10px;border-radius:8px;color:#dbe6ff;text-decoration:none;font-size:13px;word-break:break-all}
@@ -68,6 +68,9 @@ const html = `<!doctype html>
             <option value="webm">.webm</option>
             <option value="zip">.zip</option>
           </select>
+          <select id="project">
+            <option value="all">All projects</option>
+          </select>
         </div>
       </div>
       <div class="list" id="list"></div>
@@ -88,6 +91,13 @@ const html = `<!doctype html>
     const openNew = document.getElementById('openNew');
     const q = document.getElementById('q');
     const ext = document.getElementById('ext');
+    const project = document.getElementById('project');
+
+    function extractProject(filePath){
+      const runId = filePath.split('/')[0] || '';
+      const token = runId.split('-')[0] || 'unknown';
+      return token;
+    }
 
     function openFile(rel, el){
       const safe = encodeURI(rel);
@@ -99,12 +109,22 @@ const html = `<!doctype html>
       location.hash = '#' + safe;
     }
 
+    const projectKeys = [...new Set(files.map(extractProject))].sort();
+    projectKeys.forEach((k) => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = k;
+      project.appendChild(o);
+    });
+
     function filteredFiles(){
       const term = (q.value || '').toLowerCase().trim();
       const t = ext.value;
+      const p = project.value;
       return files.filter((f) => {
         if (term && !f.toLowerCase().includes(term)) return false;
         if (t !== 'all' && !f.toLowerCase().endsWith('.' + t)) return false;
+        if (p !== 'all' && extractProject(f) !== p) return false;
         return true;
       });
     }
@@ -131,6 +151,7 @@ const html = `<!doctype html>
 
     q.addEventListener('input', () => render(current.textContent));
     ext.addEventListener('change', () => render(current.textContent));
+    project.addEventListener('change', () => render(current.textContent));
 
     if(!files.length){
       list.innerHTML = '<div class="empty">No report files found yet.</div>';

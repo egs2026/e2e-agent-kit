@@ -2,7 +2,8 @@
 set -euo pipefail
 
 PRIORITY_RAW="${PRIORITY:-${1:-}}"
-RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ-priority)}"
+PROJECT_KEY="${PROJECT_KEY:-core}"
+RUN_ID="${RUN_ID:-${PROJECT_KEY}-$(date -u +%Y%m%dT%H%M%SZ-priority)}"
 export RUN_ID
 
 normalize() {

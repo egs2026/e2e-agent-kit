@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ-p2)}"
+PROJECT_KEY="${PROJECT_KEY:-core}"
+RUN_ID="${RUN_ID:-${PROJECT_KEY}-$(date -u +%Y%m%dT%H%M%SZ-p2)}"
 export RUN_ID
 
 echo "[p2] run_id=$RUN_ID"

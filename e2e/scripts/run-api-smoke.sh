@@ -2,7 +2,8 @@
 set -euo pipefail
 
 BASE_URL="${STAGING_URL:-https://staging.egsmyapps.biz.id}"
-RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ-api-smoke)}"
+PROJECT_KEY="${PROJECT_KEY:-core}"
+RUN_ID="${RUN_ID:-${PROJECT_KEY}-$(date -u +%Y%m%dT%H%M%SZ-api-smoke)}"
 OUT_DIR="reports/e2e/${RUN_ID}"
 mkdir -p "$OUT_DIR"
 
