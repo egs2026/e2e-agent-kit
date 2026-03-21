@@ -25,6 +25,15 @@ async function walk(dir, base = dir) {
 await fs.mkdir(reportsRoot, { recursive: true });
 const files = (await walk(reportsRoot)).sort((a, b) => b.localeCompare(a));
 
+let projectCatalog = [];
+try {
+  const projectMetaPath = path.join(root, 'spec', 'projects.json');
+  const projectMeta = JSON.parse(await fs.readFile(projectMetaPath, 'utf8'));
+  projectCatalog = Array.isArray(projectMeta.projects) ? projectMeta.projects : [];
+} catch {
+  projectCatalog = [];
+}
+
 const html = `<!doctype html>
 <html>
 <head>
@@ -90,6 +99,8 @@ const html = `<!doctype html>
   </div>
   <script>
     const files = ${JSON.stringify(files)};
+    const projectCatalog = ${JSON.stringify(projectCatalog)};
+    const projectNameMap = Object.fromEntries(projectCatalog.map(p => [p.key, p.name]));
     const list = document.getElementById('list');
     const viewer = document.getElementById('viewer');
     const current = document.getElementById('current');
@@ -119,7 +130,7 @@ const html = `<!doctype html>
     projectKeys.forEach((k) => {
       const o = document.createElement('option');
       o.value = k;
-      o.textContent = k;
+      o.textContent = projectNameMap[k] ? (projectNameMap[k] + ' (' + k + ')') : k;
       project.appendChild(o);
     });
 
@@ -154,7 +165,8 @@ const html = `<!doctype html>
       for (const key of keys) {
         const title = document.createElement('div');
         title.className = 'group-title';
-        title.textContent = 'Project: ' + key;
+        const pretty = projectNameMap[key] ? (projectNameMap[key] + ' (' + key + ')') : key;
+        title.textContent = 'Project: ' + pretty;
         list.appendChild(title);
 
         const box = document.createElement('div');

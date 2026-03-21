@@ -1,0 +1,6 @@
+{
+  "projects": [
+    { "key": "core", "name": "Platform Mode (Demo Scaffold)", "description": "Internal E2E platform validation flows" },
+    { "key": "ag", "name": "Anti Gravity (Product Mode)", "description": "Real Anti Gravity product validation flows" }
+  ]
+}
