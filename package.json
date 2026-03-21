@@ -15,6 +15,7 @@
     "ai:generate-spec": "node e2e/scripts/ai-generate-spec.mjs",
     "ai:refine-spec": "node e2e/scripts/ai-refine-spec.mjs",
     "mcp:daily-gate": "bash e2e/scripts/run-daily-gate.sh",
+    "prod:status": "bash e2e/scripts/prod-readiness-status.sh",
     "dashboard": "bash e2e/scripts/dashboard.sh",
     "check:endpoints": "bash e2e/scripts/check-endpoints.sh",
     "report:serve": "python3 -m http.server 8787 --directory reports/e2e",
