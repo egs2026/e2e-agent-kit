@@ -85,6 +85,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run security baseline lane
+        env:
+          STAGING_URL: ${{ secrets.STAGING_URL }}
+          E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run security
 
       - name: Upload E2E artifacts
