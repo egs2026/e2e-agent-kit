@@ -33,6 +33,7 @@ Then open:
 - `npm run ai:refine-spec -- --spec=e2e/specs/p1/<file>.json --feedback="increase timeout and add wait for dashboard"` — refine spec from natural language feedback
 - `npm run dashboard` — generate consolidated dashboard snapshot from recent runs
 - `npm run security` — run security/session baseline test pack
+- `npm run mcp:daily-gate` — run daily full gate (endpoints + API smoke + regression + security)
 - `npm run check:endpoints` — verify all public URLs + MCP auth guard
 - `npm run report:serve` — serve reports locally on port 8787
 
