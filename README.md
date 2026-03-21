@@ -32,7 +32,7 @@ Then open:
 - Multi-project runs: set `PROJECT_KEY=<project>` (e.g., `PROJECT_KEY=ag npm run regression`) to prefix run IDs for filtering
 - `npm run ai:generate-spec -- --story=e2e/stories/US-001-login-and-create.md --severity=P1 --id=P1-301` — generate draft JSON spec from user story
 - `npm run ai:refine-spec -- --spec=e2e/specs/p1/<file>.json --feedback="increase timeout and add wait for dashboard"` — refine spec from natural language feedback
-- `npm run dashboard` — generate consolidated dashboard snapshot from recent runs
+- `npm run dashboard` — generate consolidated dashboard snapshot (`PROJECT_KEY=ag npm run dashboard` for project-specific)
 - `npm run security` — run security/session baseline test pack
 - `npm run mcp:daily-gate` — run daily full gate (endpoints + API smoke + regression + security)
 - `npm run prod:status` — evaluate latest readiness and print GO/NO-GO + reasons

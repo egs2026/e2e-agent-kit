@@ -95,7 +95,8 @@ const html = `<!doctype html>
 
     function extractProject(filePath){
       const runId = filePath.split('/')[0] || '';
-      const token = runId.split('-')[0] || 'unknown';
+      if (/^\d{8}T\d{6}Z-/.test(runId)) return 'core';
+      const token = runId.split('-')[0] || 'core';
       return token;
     }
 
