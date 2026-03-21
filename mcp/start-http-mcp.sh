@@ -7,6 +7,7 @@ cd "$ROOT_DIR"
 export MCP_STDIO_PORT="${MCP_STDIO_PORT:-8810}"
 export MCP_PROXY_PORT="${MCP_PROXY_PORT:-8811}"
 export MCP_UPSTREAM="http://127.0.0.1:${MCP_STDIO_PORT}"
+export MCP_PROTOCOL_VERSION="${MCP_PROTOCOL_VERSION:-2025-06-18}"
 
 if [[ -z "${MCP_TOKEN:-}" ]]; then
   echo "[start-http-mcp] MCP_TOKEN is required"
@@ -27,6 +28,7 @@ npx -y supergateway \
   --streamableHttpPath /mcp \
   --port "${MCP_STDIO_PORT}" \
   --logLevel info \
+  --protocolVersion "${MCP_PROTOCOL_VERSION}" \
   --healthEndpoint /healthz &
 GW_PID=$!
 
