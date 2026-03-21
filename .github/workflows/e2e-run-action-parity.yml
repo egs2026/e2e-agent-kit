@@ -84,6 +84,9 @@ jobs:
           e2e-user-password: ${{ secrets.E2E_USER_PASSWORD }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Run security baseline lane
+        run: npm run security
+
       - name: Upload E2E artifacts
         if: always()
         uses: actions/upload-artifact@v4

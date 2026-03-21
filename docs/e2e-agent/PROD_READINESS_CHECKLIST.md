@@ -11,6 +11,7 @@ Use this checklist for Go/No-Go decisions.
 ## 2) Quality Gates
 - [ ] API smoke gate passes
 - [ ] UI regression gate passes (P0+P1)
+- [ ] Security lane gate passes (`npm run security`)
 - [ ] P0 pass rate = 100%
 - [ ] P1 pass rate >= 95%
 - [ ] Flaky tests tracked and quarantined
