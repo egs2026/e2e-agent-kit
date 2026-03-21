@@ -59,6 +59,12 @@ On VPS:
 
 ```bash
 cd /root/.openclaw/workspace/e2e-agent-kit
+FRONTEND_DIST=/root/dist-e2e npm run deploy:frontend
+```
+
+(Equivalent direct call)
+
+```bash
 bash deploy/frontend-deploy.sh /root/dist-e2e
 ```
 
