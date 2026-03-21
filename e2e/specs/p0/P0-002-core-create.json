@@ -2,7 +2,7 @@
   "id": "P0-002",
   "title": "Core create flow",
   "severity": "P0",
-  "requirementIds": ["REQ-CORE-001", "REQ-CORE-002"],
+  "requirementIds": ["CORE-ENT-001"],
   "baseUrlEnv": "STAGING_URL",
   "steps": [
     { "action": "goto", "url": "/login" },

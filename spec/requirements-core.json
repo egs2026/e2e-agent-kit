@@ -1,0 +1,8 @@
+{
+  "requirements": [
+    { "id": "CORE-AUTH-001", "title": "Valid user can login and access dashboard", "priority": "P0", "expectation": "After valid credentials, user can access protected dashboard" },
+    { "id": "CORE-AUTH-002", "title": "Invalid login is rejected", "priority": "P1", "expectation": "Invalid credentials stay on login and show error" },
+    { "id": "CORE-ENT-001", "title": "Demo Entity can be created", "priority": "P0", "expectation": "Valid save produces success signal" },
+    { "id": "CORE-SEC-001", "title": "Unauthorized access is blocked", "priority": "P1", "expectation": "Protected route redirects to login" }
+  ]
+}

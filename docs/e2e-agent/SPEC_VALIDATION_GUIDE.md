@@ -31,7 +31,8 @@ npm run spec:validate
 Use combined latest regression + security runs (recommended):
 
 ```bash
-npm run spec:validate:combined
+npm run spec:validate:combined -- --project=core
+npm run spec:validate:combined -- --project=ag
 ```
 
 Or specific run(s):

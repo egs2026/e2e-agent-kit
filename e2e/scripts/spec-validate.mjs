@@ -4,11 +4,14 @@ import path from 'node:path';
 const args = process.argv.slice(2);
 const runArg = args.find((a) => a.startsWith('--run-id='));
 const runIdsArg = args.find((a) => a.startsWith('--run-ids='));
+const projectArg = args.find((a) => a.startsWith('--project='));
 const combineLatest = args.includes('--combine-latest');
 
 const root = process.cwd();
 const reportRoot = path.join(root, 'reports', 'e2e');
-const reqPath = path.join(root, 'spec', 'requirements.json');
+const project = projectArg ? projectArg.split('=')[1] : 'core';
+const reqPathByProject = path.join(root, 'spec', `requirements-${project}.json`);
+const reqPathFallback = path.join(root, 'spec', 'requirements.json');
 
 async function latestRunId() {
   const dirs = await fs.readdir(reportRoot, { withFileTypes: true });
@@ -36,8 +39,12 @@ if (runIdsArg) {
     .map((d) => d.name)
     .sort()
     .reverse();
-  const latestRegression = all.find((n) => n.endsWith('-regression'));
-  const latestSecurity = all.find((n) => n.endsWith('-security'));
+
+  const projectOfRun = (n) => (/^\d{8}T\d{6}Z-/.test(n) ? 'core' : (n.split('-')[0] || 'core'));
+  const scoped = all.filter((n) => projectOfRun(n) === project);
+
+  const latestRegression = scoped.find((n) => n.endsWith('-regression'));
+  const latestSecurity = scoped.find((n) => n.endsWith('-security'));
   selectedRunIds = [latestRegression, latestSecurity].filter(Boolean);
 } else {
   const runId = runArg ? runArg.split('=')[1] : (await latestRunId());
@@ -50,7 +57,13 @@ if (selectedRunIds.length === 0) {
 }
 
 const runDir = path.join(reportRoot, selectedRunIds[0]);
-const requirements = JSON.parse(await fs.readFile(reqPath, 'utf8')).requirements || [];
+let selectedReqPath = reqPathByProject;
+try {
+  await fs.access(selectedReqPath);
+} catch {
+  selectedReqPath = reqPathFallback;
+}
+const requirements = JSON.parse(await fs.readFile(selectedReqPath, 'utf8')).requirements || [];
 
 const specFiles = await walkSpecs(path.join(root, 'e2e', 'specs'));
 const caseReqMap = new Map();
@@ -121,6 +134,8 @@ const coverageRate = totals.requirements ? Number(((totals.covered / totals.requ
 const passRate = totals.covered ? Number(((totals.pass / totals.covered) * 100).toFixed(2)) : 0;
 
 const out = {
+  project,
+  requirementsSource: selectedReqPath,
   runIds: selectedRunIds,
   generatedAt: new Date().toISOString(),
   totals: { ...totals, coverageRate, passRate },
@@ -135,7 +150,7 @@ const rows = byRequirement
   .map((r) => `| ${r.id} | ${r.priority} | ${r.status} | ${r.linkedCases.join(', ') || '-'} |`)
   .join('\n');
 
-const md = `# Spec Validation\n\n- Run IDs: ${selectedRunIds.join(', ')}\n- Requirement Coverage: ${coverageRate}%\n- Requirement Pass Rate (covered): ${passRate}%\n- Covered: ${totals.covered}\n- Uncovered: ${totals.uncovered}\n- Fail: ${totals.fail}\n- Not Executed: ${totals.notExecuted}\n\n| Requirement | Priority | Status | Linked Cases |\n|---|---|---|---|\n${rows}\n`;
+const md = `# Spec Validation\n\n- Project: ${project}\n- Requirements Source: ${selectedReqPath}\n- Run IDs: ${selectedRunIds.join(', ')}\n- Requirement Coverage: ${coverageRate}%\n- Requirement Pass Rate (covered): ${passRate}%\n- Covered: ${totals.covered}\n- Uncovered: ${totals.uncovered}\n- Fail: ${totals.fail}\n- Not Executed: ${totals.notExecuted}\n\n| Requirement | Priority | Status | Linked Cases |\n|---|---|---|---|\n${rows}\n`;
 await fs.writeFile(outMd, md);
 
 console.log(`spec_validation_json=${outJson}`);

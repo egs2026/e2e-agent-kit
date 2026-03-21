@@ -25,7 +25,13 @@ npm run report:serve
 Then open:
 - `http://<your-vps-ip>:8787/`
 
+## Modes (anti-confusion)
+- **Platform mode (`core`)**: internal scaffold/demo validation
+- **Product mode (`ag`)**: real Anti Gravity validation
+
 ## Main commands
+- `npm run test:platform` — full daily gate in platform mode (`core`)
+- `npm run test:ag` — full daily gate in product mode (`ag`)
 - `npm run smoke` — run P0 smoke pack
 - `npm run regression` — run P0+P1 regression
 - `npm run e2e:run` — run by priority (`PRIORITY=High,Medium npm run e2e:run`)

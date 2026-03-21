@@ -1,0 +1,7 @@
+{
+  "requirements": [
+    { "id": "AG-AUTH-001", "title": "Role login and landing behavior", "priority": "P0", "expectation": "Each role lands on expected default page" },
+    { "id": "AG-NAV-001", "title": "Role dashboard navigation", "priority": "P1", "expectation": "Role can access allowed modules" },
+    { "id": "AG-SEC-001", "title": "Unauthorized module access denied", "priority": "P1", "expectation": "Unauthorized route is denied gracefully" }
+  ]
+}

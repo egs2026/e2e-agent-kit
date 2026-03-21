@@ -2,7 +2,7 @@
   "id": "SEC-002",
   "title": "Post-logout protected route is blocked",
   "severity": "P1",
-  "requirementIds": ["REQ-SEC-002"],
+  "requirementIds": ["CORE-SEC-001"],
   "baseUrlEnv": "STAGING_URL",
   "steps": [
     { "action": "goto", "url": "/login" },
