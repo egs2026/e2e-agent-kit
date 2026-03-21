@@ -1,0 +1,40 @@
+{
+  "requirements": [
+    {
+      "id": "REQ-AUTH-001",
+      "title": "Valid user can login and access dashboard",
+      "priority": "P0",
+      "expectation": "After valid credentials, user can access protected dashboard"
+    },
+    {
+      "id": "REQ-AUTH-002",
+      "title": "Invalid login is rejected",
+      "priority": "P1",
+      "expectation": "Invalid credentials keep user on login and show error"
+    },
+    {
+      "id": "REQ-CORE-001",
+      "title": "User can create core record",
+      "priority": "P0",
+      "expectation": "Valid core save produces success signal"
+    },
+    {
+      "id": "REQ-CORE-002",
+      "title": "Created core record can be verified",
+      "priority": "P1",
+      "expectation": "Created record is available for detail/list verification"
+    },
+    {
+      "id": "REQ-SEC-001",
+      "title": "Unauthorized access to core list is blocked",
+      "priority": "P1",
+      "expectation": "Unauthenticated route access redirects to login"
+    },
+    {
+      "id": "REQ-SEC-002",
+      "title": "Post-logout access is blocked",
+      "priority": "P1",
+      "expectation": "After logout, protected routes cannot be accessed"
+    }
+  ]
+}

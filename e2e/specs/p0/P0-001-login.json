@@ -2,6 +2,7 @@
   "id": "P0-001",
   "title": "Login success",
   "severity": "P0",
+  "requirementIds": ["REQ-AUTH-001"],
   "baseUrlEnv": "STAGING_URL",
   "steps": [
     { "action": "goto", "url": "/login" },

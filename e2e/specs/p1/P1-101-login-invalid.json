@@ -2,6 +2,7 @@
   "id": "P1-101",
   "title": "Login fails with invalid password",
   "severity": "P1",
+  "requirementIds": ["REQ-AUTH-002"],
   "baseUrlEnv": "STAGING_URL",
   "steps": [
     { "action": "goto", "url": "/login" },
