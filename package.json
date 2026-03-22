@@ -25,7 +25,7 @@
     "dashboard": "bash e2e/scripts/dashboard.sh",
     "check:endpoints": "bash e2e/scripts/check-endpoints.sh",
     "report:explorer": "node e2e/scripts/build-report-explorer.mjs",
-    "report:serve": "python3 -m http.server 8787 --directory reports/e2e",
+    "report:serve": "python3 -m http.server 8787 --bind 127.0.0.1 --directory reports/e2e",
     "setup:playwright": "npx playwright install chromium"
   },
   "dependencies": {
