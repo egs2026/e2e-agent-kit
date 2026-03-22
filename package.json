@@ -16,6 +16,7 @@
     "e2e:run": "bash e2e/scripts/run-by-priority.sh",
     "ai:generate-spec": "node e2e/scripts/ai-generate-spec.mjs",
     "ai:refine-spec": "node e2e/scripts/ai-refine-spec.mjs",
+    "project:onboard": "node e2e/scripts/new-project-onboard.mjs",
     "mcp:daily-gate": "bash e2e/scripts/run-daily-gate.sh",
     "prod:status": "bash e2e/scripts/prod-readiness-status.sh",
     "spec:validate": "node e2e/scripts/spec-validate.mjs",
